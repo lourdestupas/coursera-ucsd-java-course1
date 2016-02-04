@@ -51,7 +51,8 @@ public class EarthquakeCityMap extends PApplet {
 
 	
 	public void setup() {
-		size(950, 600, OPENGL);
+		//size(950, 600, OPENGL);
+		size(950, 600);
 
 		if (offline) {
 		    map = new UnfoldingMap(this, 200, 50, 700, 500, new MBTilesMapProvider(mbTilesString));
@@ -75,19 +76,21 @@ public class EarthquakeCityMap extends PApplet {
 	    
 	    // These print statements show you (1) all of the relevant properties 
 	    // in the features, and (2) how to get one property and use it
-	    if (earthquakes.size() > 0) {
+	    /*if (earthquakes.size() > 0) {
 	    	PointFeature f = earthquakes.get(0);
 	    	System.out.println(f.getProperties());
 	    	Object magObj = f.getProperty("magnitude");
 	    	float mag = Float.parseFloat(magObj.toString());
 	    	// PointFeatures also have a getLocation method
+	    }*/
+	    
+	    if (earthquakes.size() > 0) {
+		    for	(PointFeature feature : earthquakes) {
+		    	markers.add(createMarker(feature));
+		    }
+		    
+		    map.addMarkers(markers);
 	    }
-	    
-	    // Here is an example of how to use Processing's color method to generate 
-	    // an int that represents the color yellow.  
-	    int yellow = color(255, 255, 0);
-	    
-	    //TODO: Add code here as appropriate
 	}
 		
 	// A suggested helper method that takes in an earthquake feature and 
@@ -95,8 +98,23 @@ public class EarthquakeCityMap extends PApplet {
 	// TODO: Implement this method and call it from setUp, if it helps
 	private SimplePointMarker createMarker(PointFeature feature)
 	{
-		// finish implementing and use this method, if it helps.
-		return new SimplePointMarker(feature.getLocation());
+		SimplePointMarker marker = new SimplePointMarker(feature.getLocation());
+    	marker.setRadius(10);
+
+    	Object magObj = feature.getProperty("magnitude");
+    	float mag = Float.parseFloat(magObj.toString());
+
+    	if (mag < 4.0f) {
+    		marker.setColor(color(0, 0, 255));
+    	}
+    	else if ((mag >= 4.0f) && (mag <= 4.9f)) {
+    		marker.setColor(color(255, 255, 0));
+    	}
+    	else {
+    		marker.setColor(color(255, 0, 0));
+    	}
+
+		return marker;
 	}
 	
 	public void draw() {
