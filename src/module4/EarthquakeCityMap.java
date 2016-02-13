@@ -35,7 +35,7 @@ public class EarthquakeCityMap extends PApplet {
 	private static final long serialVersionUID = 1L;
 
 	// IF YOU ARE WORKING OFFILINE, change the value of this variable to true
-	private static final boolean offline = false;
+	private static final boolean offline = true;
 	
 	/** This is where to find the local tiles, for working without an Internet connection */
 	public static String mbTilesString = "blankLight-1-3.mbtiles";
@@ -62,8 +62,8 @@ public class EarthquakeCityMap extends PApplet {
 	
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
-		//size(900, 700, OPENGL);
-		size(900, 700);
+		size(900, 700, OPENGL);
+		//size(900, 700);
 		
 		if (offline) {
 		    map = new UnfoldingMap(this, 200, 50, 650, 600, new MBTilesMapProvider(mbTilesString));
@@ -72,7 +72,7 @@ public class EarthquakeCityMap extends PApplet {
 		else {
 			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
-		    //earthquakesURL = "2.5_week.atom";
+		    earthquakesURL = "2.5_week.atom";
 		}
 		MapUtils.createDefaultEventDispatcher(this, map);
 		
@@ -166,7 +166,6 @@ public class EarthquakeCityMap extends PApplet {
 		// IMPLEMENT THIS: loop over all countries to check if location is in any of them
 		for (Marker country : countryMarkers) {
 			if (isInCountry(earthquake,country)) {
-				earthquake.setLocation(country.getLocation());
 				return true;
 			}
 		}
@@ -189,15 +188,14 @@ public class EarthquakeCityMap extends PApplet {
 			for(Marker quakeMarker : quakeMarkers) {
 				if (quakeMarker instanceof LandQuakeMarker) {
 					LandQuakeMarker landMarker = (LandQuakeMarker) quakeMarker; 
-					if (landMarker.getCountry() == country.toString()) {
+					if (landMarker.getCountry().equalsIgnoreCase(country.getProperty("name").toString())) {
 						quakeCtr++;
-						break;
 					}					
 				}
 			}
 			
 			if (quakeCtr > 0) {
-				System.out.println(country.toString()+"\t"+quakeCtr);
+				System.out.println(country.getProperty("name").toString()+"\t"+quakeCtr);
 			}
 		}
 	}
