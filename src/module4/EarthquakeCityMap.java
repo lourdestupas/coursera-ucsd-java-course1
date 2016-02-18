@@ -62,8 +62,8 @@ public class EarthquakeCityMap extends PApplet {
 	
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
-		size(900, 700, OPENGL);
-		//size(900, 700);
+		//size(900, 700, OPENGL);
+		size(900, 700);
 		
 		if (offline) {
 		    map = new UnfoldingMap(this, 200, 50, 650, 600, new MBTilesMapProvider(mbTilesString));
@@ -82,7 +82,7 @@ public class EarthquakeCityMap extends PApplet {
 		//earthquakesURL = "test2.atom";
 		
 		// WHEN TAKING THIS QUIZ: Uncomment the next line
-		//earthquakesURL = "quiz1.atom";
+		earthquakesURL = "quiz1.atom";
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -197,6 +197,17 @@ public class EarthquakeCityMap extends PApplet {
 			if (quakeCtr > 0) {
 				System.out.println(country.getProperty("name").toString()+"\t"+quakeCtr);
 			}
+		}
+		
+		int oceanQuakeCtr = 0;
+		for(Marker quakeMarker : quakeMarkers) {
+			if (quakeMarker instanceof OceanQuakeMarker) {
+				oceanQuakeCtr++;
+			}
+		}
+		
+		if (oceanQuakeCtr > 0) {
+			System.out.println("OCEAN QUAKES"+"\t"+oceanQuakeCtr);
 		}
 	}
 	
